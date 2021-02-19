@@ -23,7 +23,8 @@ bot.on('message', msg => {
     msg.channel.send(`Ok ${user.name}, Agora digite --cargo seguido do seu cargo (estudante ou professor)`).catch(err => console.log(err))
   }
   else if (msg.content.startsWith('--cargo')) {
-    if(msg.member.roles.cache.find(role => role.name === 'aluno' || role.name === 'professor')) return msg.channel.send('Você não pode mudar de cargo, favor entrar em contato com a administração!').catch(err => console.log(err));
+    if(msg.member.roles.cache.find(role => role.name === 'aluno' || role.name === 'professor')) 
+      return msg.channel.send('Você não pode mudar de cargo, favor entrar em contato com a administração!').catch(err => console.log(err));
     const futureRole = msg.content.split('--cargo ')[1]
     const role = msg.guild.roles.cache.find(role => role.name === futureRole)
     user.cargo = role.name
