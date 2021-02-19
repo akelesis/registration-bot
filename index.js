@@ -3,11 +3,6 @@ const Discord = require('discord.js');
 const bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
 
-const capitalize = (arg) => {
-  return arg[0].toUpperCase() + arg.slice(1).toLowerCase()
-}
-
-
 bot.login(TOKEN);
 
 bot.on('ready', () => {
@@ -28,14 +23,15 @@ bot.on('message', msg => {
     msg.channel.send(`Ok ${user.name}, Agora digite --cargo seguido do seu cargo (estudante ou professor)`).catch(err => console.log(err))
   }
   else if (msg.content.startsWith('--cargo')) {
-    if(msg.content.split("--cargo ")[1] === 'tester'){
-      user.cargo = 'tester'
-      msg.member.addRole('812155404217090129').catch(err => console.log(err, user.cargo))
-    }
-    msg.channel.send(`nome: ${user.name} cargo: ${user.cargo}`).catch(err => console.log(err))
+    if(msg.member.roles.cache.find(role => role.name === 'aluno' || role.name === 'professor')) return msg.channel.send('Você não pode mudar de cargo, favor entrar em contato com a administração!').catch(err => console.log(err));
+    const futureRole = msg.content.split('--cargo ')[1]
+    const role = msg.guild.roles.cache.find(role => role.name === futureRole)
+    user.cargo = role.name
+    msg.member.roles.add(role)
+    msg.channel.send(`nome: ${msg.member.nickname} cargo: ${user.cargo}`).catch(err => console.log(err))
     msg.channel.send('Cadastro realizado com sucesso!').catch(err => console.log(err))
   }
   else if(msg.content === '--status') {
-    msg.channel.send(`@${msg.author.username}, pode dizer?!`).catch(err => console.log(err))
+    msg.channel.send(`@${msg.member.nickname}, pode dizer?!`).catch(err => console.log(err))
   }
 });
